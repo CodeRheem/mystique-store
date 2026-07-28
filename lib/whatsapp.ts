@@ -1,6 +1,6 @@
 // Replace with her actual WhatsApp number, in international format, no + or spaces
 // e.g. Nigerian number 0803 123 4567 -> "2348031234567"
-export const BUSINESS_WHATSAPP_NUMBER = "2348000000000";
+export const BUSINESS_WHATSAPP_NUMBER = "2348051353755";
 
 export function buildWhatsAppOrderLink({
   customerName,
