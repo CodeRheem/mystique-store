@@ -51,6 +51,17 @@ export default function AdminPage() {
     setPhotoPreview(URL.createObjectURL(file));
   }
 
+  // Formats a raw number string with thousand separators as she types, e.g. "5000" -> "5,000"
+  function formatPriceInput(value: string): string {
+    const digitsOnly = value.replace(/[^\d]/g, "");
+    if (!digitsOnly) return "";
+    return Number(digitsOnly).toLocaleString("en-NG");
+  }
+
+  function handlePriceChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setForm({ ...form, price: formatPriceInput(e.target.value) });
+  }
+
   useEffect(() => {
     if (session) loadProducts();
   }, [session]);
@@ -79,7 +90,7 @@ export default function AdminPage() {
     setEditingProduct(product);
     setForm({
       name: product.name,
-      price: String(product.price),
+      price: formatPriceInput(String(product.price)),
       photo_url: product.photo_url ?? "",
       options: product.options ?? "",
       is_new: product.is_new,
@@ -110,7 +121,7 @@ export default function AdminPage() {
       if (editingProduct) {
         await updateProduct(editingProduct.id, {
           name: form.name,
-          price: Number(form.price),
+          price: Number(form.price.replace(/,/g, "")),
           photo_url: photoUrl,
           options: form.options || null,
           is_new: form.is_new,
@@ -118,7 +129,7 @@ export default function AdminPage() {
       } else {
         await addProduct({
           name: form.name,
-          price: Number(form.price),
+          price: Number(form.price.replace(/,/g, "")),
           photo_url: photoUrl,
           options: form.options || null,
           is_new: form.is_new,
@@ -212,10 +223,11 @@ export default function AdminPage() {
                   <Label htmlFor="price">Price (₦)</Label>
                   <Input
                     id="price"
-                    type="number"
+                    type="text"
+                    inputMode="numeric"
                     value={form.price}
-                    onChange={(e) => setForm({ ...form, price: e.target.value })}
-                    placeholder="e.g. 5000"
+                    onChange={handlePriceChange}
+                    placeholder="e.g. 5,000"
                   />
                 </div>
 
@@ -226,7 +238,7 @@ export default function AdminPage() {
                     <img
                       src={photoPreview}
                       alt="Preview"
-                      className="w-full h-40 object-cover rounded-md border mb-2"
+                      className="w-full h-40 object-contain bg-muted rounded-md border mb-2"
                     />
                   )}
                   <Input
@@ -293,7 +305,7 @@ export default function AdminPage() {
                 <img
                   src={product.photo_url}
                   alt={product.name}
-                  className="w-full h-40 object-cover"
+                  className="w-full h-40 object-contain bg-muted"
                 />
               )}
               <CardContent className="pt-4">
