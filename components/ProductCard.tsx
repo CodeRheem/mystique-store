@@ -37,26 +37,26 @@ export default function ProductCard({ product }: { product: Product }) {
 
   return (
     <Card className="overflow-hidden flex flex-col">
-      <div className="relative h-80 bg-muted flex items-center justify-center p-3">
+      <div className="relative h-64 bg-muted flex items-center justify-center p-3">
         {product.photo_url ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={product.photo_url}
             alt={product.name}
-            className="w-full h-full object-contain"
+            className="max-h-full max-w-full object-contain"
           />
         ) : (
           <div className="flex items-center justify-center h-full text-muted-foreground text-sm">
             No photo
           </div>
         )}
-        <div className="absolute top-2 left-2 flex gap-2">
-          {product.is_new && <Badge>New</Badge>}
-          {product.is_sold_out && <Badge variant="destructive">Sold Out</Badge>}
-        </div>
       </div>
 
       <CardContent className="pt-4 flex-1">
+        <div className="flex gap-2 mb-2">
+          {product.is_new && <Badge>New</Badge>}
+          {product.is_sold_out && <Badge variant="destructive">Sold Out</Badge>}
+        </div>
         <h3 className="font-medium">{product.name}</h3>
         <p className="text-muted-foreground">₦{product.price.toLocaleString()}</p>
         {optionsList.length > 0 && (
