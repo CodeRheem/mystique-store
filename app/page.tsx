@@ -1,11 +1,15 @@
 import { getProducts } from "@/lib/products";
 import ProductCard from "@/components/ProductCard";
 import { ThemeToggle } from "@/components/theme-toggle";
+import Link from "next/link";
+import Image from "next/image";
+import { Product } from "@/types/product";
+
 
 export const revalidate = 30; // refresh product list every 30s
 
 export default async function HomePage() {
-  let products: Awaited<ReturnType<typeof getProducts>>;
+  let products: Product[] = [];
   let error = false;
 
   try {
@@ -19,11 +23,18 @@ export default async function HomePage() {
     <main className="min-h-screen bg-background">
       <header className="border-b">
         <div className="max-w-5xl mx-auto px-4 py-6 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            {/* Swap for her actual logo image */}
-            <div className="h-10 w-10 rounded-full bg-primary" />
-            <h1 className="text-xl font-semibold">Business Name</h1>
-          </div>
+          <Link href="/admin/login" className="flex items-center gap-3 group">
+            <Image
+              src="/WhatsApp Image 2026-07-24 at 20.46.16.jpeg"
+              alt="Mystique World logo"
+              width={40}
+              height={40}
+              className="h-10 w-10 rounded-full object-cover"
+            />
+            <h1 className="text-xl font-semibold group-hover:opacity-80 transition-opacity">
+              Mystique World
+            </h1>
+          </Link>
           <ThemeToggle />
         </div>
       </header>

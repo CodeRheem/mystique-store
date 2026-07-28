@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -35,45 +36,51 @@ export default function LoginPage() {
   }
 
   return (
-    <>
-      <div className="min-h-screen flex items-center justify-center bg-background px-4">
-        <form
-          onSubmit={handleLogin}
-          className="w-full max-w-sm space-y-4 border rounded-lg p-6"
-        >
-          <h1 className="text-xl font-semibold text-center">Admin Login</h1>
+    <div className="min-h-screen flex items-center justify-center bg-background px-4">
+      <form
+        onSubmit={handleLogin}
+        className="w-full max-w-sm space-y-4 border rounded-lg p-6"
+      >
+        <h1 className="text-xl font-semibold text-center">Admin Login</h1>
 
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              placeholder="Input your email my love"
-            />
-          </div>
+        {/* Notice for anyone who clicked here by accident */}
+        <div className="bg-muted border rounded-md p-3 text-sm text-muted-foreground">
+          This page is for the business owner only. If you&apos;re a customer
+          looking to browse or order products, please{" "}
+          <Link href="/" className="underline font-medium text-foreground">
+            go back to the shop
+          </Link>
+          .
+        </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-                placeholder="Input your password my love"
-            />
-          </div>
+        <div className="space-y-2">
+          <Label htmlFor="email">Email</Label>
+          <Input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
 
-          {error && <p className="text-sm text-destructive">{error}</p>}
+        <div className="space-y-2">
+          <Label htmlFor="password">Password</Label>
+          <Input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
 
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Logging in..." : "Log In"}
-          </Button>
-        </form>
-      </div>
-    </>
+        {error && <p className="text-sm text-destructive">{error}</p>}
+
+        <Button type="submit" className="w-full" disabled={loading}>
+          {loading ? "Logging in..." : "Log In"}
+        </Button>
+      </form>
+    </div>
   );
 }
