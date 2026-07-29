@@ -4,7 +4,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { Product } from "@/types/product";
 
-
 export const revalidate = 30; // refresh product list every 30s
 
 export default async function HomePage() {
@@ -20,11 +19,11 @@ export default async function HomePage() {
 
   return (
     <main className="min-h-screen bg-background">
-      <header className="border-b">
+      <header className="border-b animate-in fade-in slide-in-from-top-2 duration-500">
         <div className="max-w-5xl mx-auto px-4 py-6 flex items-center justify-between">
           <Link href="/admin/login" className="flex items-center gap-3 group">
             <Image
-              src="/logom.jpeg"
+              src="/logo.jpeg"
               alt="Mystique World logo"
               width={40}
               height={40}
@@ -37,7 +36,7 @@ export default async function HomePage() {
         </div>
       </header>
 
-      <section className="max-w-5xl mx-auto px-4 py-8">
+      <section className="max-w-5xl mx-auto px-4 py-8 animate-in fade-in slide-in-from-bottom-2 duration-700">
         <h2 className="text-2xl font-bold mb-1">Our Products</h2>
         <p className="text-muted-foreground mb-6">
           Browse and order directly on WhatsApp.
@@ -54,8 +53,14 @@ export default async function HomePage() {
         )}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
+          {products.map((product, index) => (
+            <div
+              key={product.id}
+              className="animate-in fade-in duration-700"
+              style={{ animationDelay: `${index * 75}ms`, animationFillMode: "backwards" }}
+            >
+              <ProductCard product={product} />
+            </div>
           ))}
         </div>
       </section>
