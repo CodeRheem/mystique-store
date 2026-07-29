@@ -37,9 +37,9 @@ export default async function HomePage() {
       </header>
 
       <section className="max-w-5xl mx-auto px-4 py-8 animate-in fade-in slide-in-from-bottom-2 duration-700">
-        <h2 className="text-2xl font-bold mb-1">Our Products</h2>
+        <h2 className="text-2xl font-bold mb-1">La <span className="text-primary underline">boutique.</span></h2>
         <p className="text-muted-foreground mb-6">
-          Browse and order directly on WhatsApp.
+          Take your order to the next level with our exlusive products.
         </p>
 
         {error && (
