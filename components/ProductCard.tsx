@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Product } from "@/types/product";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -15,6 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { buildWhatsAppOrderLink } from "@/lib/whatsapp";
+import { SparklesIcon } from "hugeicons-react";
 
 export default function ProductCard({ product }: { product: Product }) {
   const [customerName, setCustomerName] = useState("");
@@ -36,46 +36,80 @@ export default function ProductCard({ product }: { product: Product }) {
   }
 
   return (
-    <Card className="overflow-hidden flex flex-col">
-      <div className="relative h-64 bg-muted flex items-center justify-center p-3">
+    <Card className="group overflow-hidden flex flex-col rounded-2xl border-border/60 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10 hover:border-primary/30">
+      {/* Photo */}
+      <div className="relative h-64 bg-muted flex items-center justify-center p-4 overflow-hidden">
         {product.photo_url ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={product.photo_url}
             alt={product.name}
-            className="max-h-full max-w-full object-contain"
+            className="max-h-full max-w-full object-contain transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
           <div className="flex items-center justify-center h-full text-muted-foreground text-sm">
             No photo
           </div>
         )}
+
+        {/* Sold out overlay dims the whole photo for clear unavailability */}
+        {product.is_sold_out && (
+          <div className="absolute inset-0 bg-background/60 backdrop-blur-[1px]" />
+        )}
       </div>
 
-      <CardContent className="pt-4 flex-1">
-        <div className="flex gap-2 mb-2">
-          {product.is_new && <Badge>New</Badge>}
-          {product.is_sold_out && <Badge variant="destructive">Sold Out</Badge>}
+      <CardContent className="pt-5 flex-1">
+        {/* Status pills */}
+        <div className="flex gap-2 mb-3">
+          {product.is_new && (
+            <span className="inline-flex items-center gap-1 text-[11px] font-medium tracking-wide uppercase px-2.5 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
+              <SparklesIcon className="h-3 w-3" />
+              New Arrival
+            </span>
+          )}
+          {product.is_sold_out && (
+            <span className="text-[11px] font-medium tracking-wide uppercase px-2.5 py-1 rounded-full bg-muted text-muted-foreground border border-border">
+              Sold Out
+            </span>
+          )}
         </div>
-        <h3 className="font-medium">{product.name}</h3>
-        <p className="text-muted-foreground">₦{product.price.toLocaleString()}</p>
+
+        {/* Name + price */}
+        <h3 className="font-heading text-lg leading-snug tracking-tight">
+          {product.name}
+        </h3>
+        <p className="mt-1 text-primary font-semibold tracking-wide">
+          ₦{product.price.toLocaleString()}
+        </p>
+
+        {/* Options as refined pills instead of plain text */}
         {optionsList.length > 0 && (
-          <p className="text-xs text-muted-foreground mt-1">
-            Options: {optionsList.join(", ")}
-          </p>
+          <div className="flex flex-wrap gap-1.5 mt-3">
+            {optionsList.map((opt) => (
+              <span
+                key={opt}
+                className="text-[11px] px-2 py-0.5 rounded-full border border-border text-muted-foreground"
+              >
+                {opt}
+              </span>
+            ))}
+          </div>
         )}
       </CardContent>
 
-      <CardFooter>
+      <CardFooter className="pt-0">
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            <Button className="w-full" disabled={product.is_sold_out}>
-              {product.is_sold_out ? "Sold Out" : "Order on WhatsApp"}
+            <Button
+              className="w-full rounded-full font-medium tracking-wide"
+              disabled={product.is_sold_out}
+            >
+              {product.is_sold_out ? "Currently Unavailable" : "Order on WhatsApp"}
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Order {product.name}</DialogTitle>
+              <DialogTitle className="font-heading">Order {product.name}</DialogTitle>
             </DialogHeader>
 
             <div className="space-y-4 py-2">
@@ -108,7 +142,7 @@ export default function ProductCard({ product }: { product: Product }) {
                 </div>
               )}
 
-              <Button className="w-full" onClick={handleOrder}>
+              <Button className="w-full rounded-full" onClick={handleOrder}>
                 Send Order on WhatsApp
               </Button>
             </div>
