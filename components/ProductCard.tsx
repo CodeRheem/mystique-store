@@ -143,7 +143,7 @@ export default function ProductCard({ product }: { product: Product }) {
               )}
 
               <Button className="w-full rounded-full" onClick={handleOrder}>
-                Send Order on WhatsApp
+                Place Order
               </Button>
             </div>
           </DialogContent>
