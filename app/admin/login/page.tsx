@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ViewIcon, ViewOffIcon } from "hugeicons-react";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -95,7 +96,13 @@ export default function LoginPage() {
         {error && <p className="text-sm text-destructive">{error}</p>}
 
         <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? "Logging in..." : "Log In"}
+          {loading ? (
+            <>
+              <Spinner /> Logging in...
+            </>
+          ) : (
+            "Log In"
+          )}
         </Button>
       </form>
     </div>

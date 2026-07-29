@@ -7,6 +7,7 @@ import { getProducts, addProduct, updateProduct, deleteProduct } from "@/lib/pro
 import { uploadProductPhoto } from "@/lib/uploadphoto";
 import { supabase } from "@/lib/supabase";
 import { Product } from "@/types/product";
+import { Spinner } from "@/components/ui/spinner";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -43,6 +44,11 @@ export default function AdminPage() {
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string>("");
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const [loveDialogOpen, setLoveDialogOpen] = useState(false);
+
+  useEffect(() => {
+    if (session) setLoveDialogOpen(true);
+  }, [session]);
 
   function handlePhotoSelect(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -172,7 +178,11 @@ export default function AdminPage() {
   }
 
   if (loading) {
-    return <div className="p-6">Loading...</div>;
+    return (
+      <div className="p-6 flex items-center gap-2 text-muted-foreground">
+        <Spinner /> Loading...
+      </div>
+    );
   }
 
   if (!session) {
@@ -184,7 +194,7 @@ export default function AdminPage() {
       <header className="border-b">
         <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
           <div>
-            <h1 className="text-lg font-semibold">Kabirah <span className="text-primary">Anifowose</span></h1>
+            <h1 className="text-lg font-semibold">Admin Dashboard</h1>
             <p className="text-sm text-muted-foreground">{session.user.email}</p>
           </div>
           <Button variant="outline" onClick={handleLogout}>
@@ -196,7 +206,80 @@ export default function AdminPage() {
       <main className="max-w-5xl mx-auto px-4 py-6">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold">Products</h2>
+        </div>
 
+        {error && !dialogOpen && (
+          <p className="text-sm text-destructive mb-4">{error}</p>
+        )}
+
+        {productsLoading && (
+          <p className="text-muted-foreground flex items-center gap-2">
+            <Spinner /> Loading products...
+          </p>
+        )}
+
+        {!productsLoading && products.length === 0 && (
+          <p className="text-muted-foreground">No products yet. Add your first one below.</p>
+        )}
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {products.map((product) => (
+            <Card key={product.id} className="overflow-hidden">
+              {product.photo_url && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={product.photo_url}
+                  alt={product.name}
+                  className="w-full h-40 object-contain bg-muted"
+                />
+              )}
+              <CardContent className="pt-4">
+                <div className="flex justify-between items-start mb-2">
+                  <div>
+                    <h3 className="font-medium">{product.name}</h3>
+                    <p className="text-muted-foreground text-sm">
+                      ₦{product.price.toLocaleString()}
+                    </p>
+                  </div>
+                  <div className="flex gap-1">
+                    {product.is_new && <Badge>New</Badge>}
+                    {product.is_sold_out && (
+                      <Badge variant="destructive">Sold Out</Badge>
+                    )}
+                  </div>
+                </div>
+
+                {product.options && (
+                  <p className="text-xs text-muted-foreground mb-3">
+                    Options: {product.options}
+                  </p>
+                )}
+
+                <div className="flex gap-2 flex-wrap">
+                  <Button size="sm" variant="outline" onClick={() => openEditDialog(product)}>
+                    Edit
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleToggleSoldOut(product)}
+                  >
+                    {product.is_sold_out ? "Mark Available" : "Mark Sold Out"}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    onClick={() => handleDelete(product)}
+                  >
+                    Delete
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        <div className="mt-6">
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
               <Button onClick={openAddDialog}>Add Product</Button>
@@ -274,86 +357,44 @@ export default function AdminPage() {
                 {error && <p className="text-sm text-destructive">{error}</p>}
 
                 <Button className="w-full" onClick={handleSave} disabled={saving}>
-                  {uploadingPhoto
-                    ? "Uploading photo..."
-                    : saving
-                    ? "Saving..."
-                    : editingProduct
-                    ? "Save Changes"
-                    : "Add Product"}
+                  {uploadingPhoto ? (
+                    <>
+                      <Spinner /> Uploading photo...
+                    </>
+                  ) : saving ? (
+                    <>
+                      <Spinner /> Saving...
+                    </>
+                  ) : editingProduct ? (
+                    "Save Changes"
+                  ) : (
+                    "Add Product"
+                  )}
                 </Button>
               </div>
             </DialogContent>
           </Dialog>
         </div>
-
-        {error && !dialogOpen && (
-          <p className="text-sm text-destructive mb-4">{error}</p>
-        )}
-
-        {productsLoading && <p className="text-muted-foreground">Loading products...</p>}
-
-        {!productsLoading && products.length === 0 && (
-          <p className="text-muted-foreground">No products yet. Add your first one above.</p>
-        )}
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {products.map((product) => (
-            <Card key={product.id} className="overflow-hidden">
-              {product.photo_url && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={product.photo_url}
-                  alt={product.name}
-                  className="w-full h-40 object-contain bg-muted"
-                />
-              )}
-              <CardContent className="pt-4">
-                <div className="flex justify-between items-start mb-2">
-                  <div>
-                    <h3 className="font-medium">{product.name}</h3>
-                    <p className="text-muted-foreground text-sm">
-                      ₦{product.price.toLocaleString()}
-                    </p>
-                  </div>
-                  <div className="flex gap-1">
-                    {product.is_new && <Badge>New</Badge>}
-                    {product.is_sold_out && (
-                      <Badge variant="destructive">Sold Out</Badge>
-                    )}
-                  </div>
-                </div>
-
-                {product.options && (
-                  <p className="text-xs text-muted-foreground mb-3">
-                    Options: {product.options}
-                  </p>
-                )}
-
-                <div className="flex gap-2 flex-wrap">
-                  <Button size="sm" variant="outline" onClick={() => openEditDialog(product)}>
-                    Edit
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => handleToggleSoldOut(product)}
-                  >
-                    {product.is_sold_out ? "Mark Available" : "Mark Sold Out"}
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="destructive"
-                    onClick={() => handleDelete(product)}
-                  >
-                    Delete
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
       </main>
+
+      {/* A little fun for her on login - she must answer to proceed */}
+      <Dialog open={loveDialogOpen}>
+        <DialogContent
+          className="text-center [&>button]:hidden"
+          onInteractOutside={(e) => e.preventDefault()}
+          onEscapeKeyDown={(e) => e.preventDefault()}
+        >
+          <DialogHeader>
+            <DialogTitle className="text-center text-xl">
+              Do you love CodeRheem? 👀
+            </DialogTitle>
+          </DialogHeader>
+          <div className="flex gap-3 justify-center py-2">
+            <Button onClick={() => setLoveDialogOpen(false)}>Yes</Button>
+            <Button onClick={() => setLoveDialogOpen(false)}>Yes</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -24,7 +24,7 @@ export default async function HomePage() {
         <div className="max-w-5xl mx-auto px-4 py-6 flex items-center justify-between">
           <Link href="/admin/login" className="flex items-center gap-3 group">
             <Image
-              src="logom.jpeg"
+              src="/logom.jpeg"
               alt="Mystique World logo"
               width={40}
               height={40}
