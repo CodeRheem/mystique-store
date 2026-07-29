@@ -184,7 +184,7 @@ export default function AdminPage() {
       <header className="border-b">
         <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
           <div>
-            <h1 className="text-lg font-semibold">Admin Dashboard</h1>
+            <h1 className="text-lg font-semibold">Kabirah <span className="text-primary">Anifowose</span></h1>
             <p className="text-sm text-muted-foreground">{session.user.email}</p>
           </div>
           <Button variant="outline" onClick={handleLogout}>

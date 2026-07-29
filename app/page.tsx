@@ -1,6 +1,5 @@
 import { getProducts } from "@/lib/products";
 import ProductCard from "@/components/ProductCard";
-import { ThemeToggle } from "@/components/theme-toggle";
 import Link from "next/link";
 import Image from "next/image";
 import { Product } from "@/types/product";
@@ -25,7 +24,7 @@ export default async function HomePage() {
         <div className="max-w-5xl mx-auto px-4 py-6 flex items-center justify-between">
           <Link href="/admin/login" className="flex items-center gap-3 group">
             <Image
-              src="/WhatsApp Image 2026-07-24 at 20.46.16.jpeg"
+              src="logom.jpeg"
               alt="Mystique World logo"
               width={40}
               height={40}
@@ -35,7 +34,6 @@ export default async function HomePage() {
               Mystique World
             </h1>
           </Link>
-          <ThemeToggle />
         </div>
       </header>
 
