@@ -30,7 +30,7 @@ export default async function HomePage() {
               className="h-10 w-10 rounded-full object-cover"
             />
             <h1 className="text-xl font-semibold group-hover:opacity-80 transition-opacity">
-              Mystique World
+              Mystique Worlds
             </h1>
           </Link>
         </div>
