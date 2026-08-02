@@ -71,7 +71,7 @@ export default async function HomePage() {
     
       <div className="max-w-5xl mx-auto px-4">
         <section className="py-8 animate-in fade-in slide-in-from-bottom-2 duration-700">
-          <div className="border border-white-900 rounded-3xl p-2 -mt-4">
+          <div className="border border-white-900 rounded-3xl p-4 -mt-4">
             <h2
               className={`${libertinusSerif.className} text-3xl font-bold text-primary`}
             >
@@ -85,7 +85,7 @@ export default async function HomePage() {
         </section>
 
         <section className="-my-3 py-8 animate-in fade-in slide-in-from-bottom-2 duration-700 border border-white-900 rounded-3xl">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 items-center px-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 items-center p-3">
             {error && (
               <p className="text-destructive">
                 Couldn&apos;t load products right now. Please try again shortly.

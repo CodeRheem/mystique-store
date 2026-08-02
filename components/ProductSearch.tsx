@@ -21,18 +21,18 @@ export default function ProductSearch({ products }: { products: Product[] }) {
     <div>
       {/* Search bar */}
       <div className="relative mb-2">
-        <Search01Icon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Search01Icon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" />
         <Input
           type="text"
           placeholder="Search products..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="pl-10 pr-10 rounded-full"
+          className="pl-10 pr-10 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-3xl"
         />
         {isSearching && (
           <button
             onClick={() => setQuery("")}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
             aria-label="Clear search"
           >
             <Cancel01Icon className="h-4 w-4" />
