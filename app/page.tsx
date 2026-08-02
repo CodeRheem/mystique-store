@@ -3,10 +3,16 @@ import ProductCard from "@/components/ProductCard";
 import Link from "next/link";
 import Image from "next/image";
 import { Product } from "@/types/product";
-import { Menu02Icon } from "hugeicons-react";
+import { Libertinus_Serif } from "next/font/google";
 import { Stalemate } from "next/font/google";
 import { FavouriteIcon } from "hugeicons-react";
 import { ShoppingCart02Icon } from "hugeicons-react";
+import ProductSearch from "@/components/ProductSearch";
+
+const libertinusSerif = Libertinus_Serif({
+  subsets: ["latin"],
+  weight: "400",
+});
 
 const stalemate = Stalemate({
   subsets: ["latin"],
@@ -63,27 +69,31 @@ export default async function HomePage() {
       </header>
 
       <section className="max-w-5xl mx-auto px-4 py-8 animate-in fade-in slide-in-from-bottom-2 duration-700">
-        <div></div>
-        <h2 className="text-2xl font-bold mb-1">
-          La <span className="text-primary underline">boutique.</span>
-        </h2>
-        <p className="text-muted-foreground mb-6">
-          Take your order to the next level with our exlusive products.
-        </p>
-
-        {error && (
-          <p className="text-destructive">
-            Couldn&apos;t load products right now. Please try again shortly.
+        <div className="border border-white-900 rounded-3xl p-2 -mt-4">
+          <h2
+            className={`${libertinusSerif.className} text-3xl font-bold text-primary`}
+          >
+            Welcome,
+          </h2>
+          <p className="text-muted-foreground mb-6 text-sm">
+            ...Mystify your senses. Define your style.
           </p>
-        )}
-
-        {!error && products.length === 0 && (
-          <p className="text-muted-foreground">
-            No products yet — check back soon!
-          </p>
-        )}
-
+          <ProductSearch products={products} />
+        </div>
+      </section>
+      <section className="max-w-5xl mx-4 -my-3 px-6 py-8 animate-in fade-in slide-in-from-bottom-2 duration-700 border border-white-900 rounded-3xl">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          {error && (
+            <p className="text-destructive">
+              Couldn&apos;t load products right now. Please try again shortly.
+            </p>
+          )}
+
+          {!error && products.length === 0 && (
+            <p className="text-muted-foreground text-center">
+              No products yet — check back soon!
+            </p>
+          )}
           {products.map((product, index) => (
             <div
               key={product.id}
