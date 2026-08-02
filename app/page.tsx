@@ -68,46 +68,50 @@ export default async function HomePage() {
         </div>
       </header>
 
-      <section className="max-w-5xl mx-auto px-4 py-8 animate-in fade-in slide-in-from-bottom-2 duration-700">
-        <div className="border border-white-900 rounded-3xl p-2 -mt-4">
-          <h2
-            className={`${libertinusSerif.className} text-3xl font-bold text-primary`}
-          >
-            Welcome,
-          </h2>
-          <p className="text-muted-foreground mb-6 text-sm">
-            ...Mystify your senses. Define your style.
-          </p>
-          <ProductSearch products={products} />
-        </div>
-      </section>
-      <section className="max-w-8xl w-[52%] mx-auto -my-3 px-4 py-8 animate-in fade-in slide-in-from-bottom-2 duration-700 border border-white-900 rounded-3xl">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 items-center">
-          {error && (
-            <p className="text-destructive">
-              Couldn&apos;t load products right now. Please try again shortly.
-            </p>
-          )}
-
-          {!error && products.length === 0 && (
-            <p className="text-muted-foreground text-center">
-              No products yet — check back soon!
-            </p>
-          )}
-          {products.map((product, index) => (
-            <div
-              key={product.id}
-              className="animate-in fade-in duration-700"
-              style={{
-                animationDelay: `${index * 75}ms`,
-                animationFillMode: "backwards",
-              }}
+    
+      <div className="max-w-5xl mx-auto px-4">
+        <section className="py-8 animate-in fade-in slide-in-from-bottom-2 duration-700">
+          <div className="border border-white-900 rounded-3xl p-2 -mt-4">
+            <h2
+              className={`${libertinusSerif.className} text-3xl font-bold text-primary`}
             >
-              <ProductCard product={product} />
-            </div>
-          ))}
-        </div>
-      </section>
+              Welcome,
+            </h2>
+            <p className="text-muted-foreground mb-6 text-sm">
+              ...Mystify your senses. Define your style.
+            </p>
+            <ProductSearch products={products} />
+          </div>
+        </section>
+
+        <section className="-my-3 py-8 animate-in fade-in slide-in-from-bottom-2 duration-700 border border-white-900 rounded-3xl">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 items-center px-4">
+            {error && (
+              <p className="text-destructive">
+                Couldn&apos;t load products right now. Please try again shortly.
+              </p>
+            )}
+
+            {!error && products.length === 0 && (
+              <p className="text-muted-foreground text-center">
+                No products yet — check back soon!
+              </p>
+            )}
+            {products.map((product, index) => (
+              <div
+                key={product.id}
+                className="animate-in fade-in duration-700"
+                style={{
+                  animationDelay: `${index * 75}ms`,
+                  animationFillMode: "backwards",
+                }}
+              >
+                <ProductCard product={product} />
+              </div>
+            ))}
+          </div>
+        </section>
+      </div>
     </main>
   );
 }
