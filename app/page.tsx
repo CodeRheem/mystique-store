@@ -81,8 +81,8 @@ export default async function HomePage() {
           <ProductSearch products={products} />
         </div>
       </section>
-      <section className="max-w-5xl mx-4 -my-3 px-6 py-8 animate-in fade-in slide-in-from-bottom-2 duration-700 border border-white-900 rounded-3xl">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <section className="max-w-8xl w-[52%] mx-auto -my-3 px-4 py-8 animate-in fade-in slide-in-from-bottom-2 duration-700 border border-white-900 rounded-3xl">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 items-center">
           {error && (
             <p className="text-destructive">
               Couldn&apos;t load products right now. Please try again shortly.
