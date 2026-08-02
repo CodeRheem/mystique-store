@@ -41,7 +41,7 @@ export default async function HomePage() {
             </Link>
 
             {/* Center */}
-            <h1 className={`${stalemate.className} text-5xl flex-1 text-center font-bold text-primary`}>
+            <h1 className={`${stalemate.className} text-2xl flex-1 text-center font-bold text-primary`}>
               Mystique World
             </h1>
 
