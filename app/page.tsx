@@ -5,6 +5,8 @@ import Image from "next/image";
 import { Product } from "@/types/product";
 import { Menu02Icon } from "hugeicons-react";
 import { Stalemate } from "next/font/google";
+import { FavouriteIcon } from "hugeicons-react";
+import { ShoppingCart02Icon } from "hugeicons-react";
 
 const stalemate = Stalemate({
   subsets: ["latin"],
@@ -41,17 +43,27 @@ export default async function HomePage() {
             </Link>
 
             {/* Center */}
-            <h1 className={`${stalemate.className} text-2xl flex-1 text-center font-bold text-primary`}>
+            <h1
+              className={`${stalemate.className} text-2xl flex-1 text-center font-bold text-primary`}
+            >
               Mystique World
             </h1>
 
             {/* Right */}
-            <Menu02Icon className="h-6 w-6" />
+            <div className="flex items-center space-x-6">
+              <Link href="/favorites">
+                <FavouriteIcon className="h-6 w-6 text-primary" />
+              </Link>
+              <Link href="/cart">
+                <ShoppingCart02Icon className="h-6 w-6 text-primary" />
+              </Link>
+            </div>
           </div>
         </div>
       </header>
 
       <section className="max-w-5xl mx-auto px-4 py-8 animate-in fade-in slide-in-from-bottom-2 duration-700">
+        <div></div>
         <h2 className="text-2xl font-bold mb-1">
           La <span className="text-primary underline">boutique.</span>
         </h2>
