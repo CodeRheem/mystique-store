@@ -38,7 +38,6 @@ export function buildWhatsAppCartLink({
 }) {
   const lines = [
     `Hello, I would like to place an order for the following items:`,
-    `Customer Name: ${customerName}`,
     ...items.map((item) => {
       const optionText = item.options ? ` (${item.options})` : "";
       const lineTotal = item.price * item.quantity;

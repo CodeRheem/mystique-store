@@ -235,8 +235,103 @@ export default function AdminPage() {
       </header>
 
       <main className="max-w-5xl mx-auto px-4 py-6">
-        <div className="flex items-center justify-between mb-6">
+        <div className="mb-6 flex items-center justify-between gap-3">
           <h2 className="text-xl font-semibold">Products</h2>
+
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogTrigger asChild>
+              <Button onClick={openAddDialog}>Add Product</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>
+                  {editingProduct ? "Edit Product" : "Add Product"}
+                </DialogTitle>
+              </DialogHeader>
+
+              <div className="space-y-4 py-2">
+                <div className="space-y-2">
+                  <Label htmlFor="name">Product Name</Label>
+                  <Input
+                    id="name"
+                    value={form.name}
+                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                    placeholder="e.g. Vanilla Perfume"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="price">Price (₦)</Label>
+                  <Input
+                    id="price"
+                    type="text"
+                    inputMode="numeric"
+                    value={form.price}
+                    onChange={handlePriceChange}
+                    placeholder="e.g. 5,000"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="photo">Product Photo</Label>
+                  {photoPreview && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={photoPreview}
+                      alt="Preview"
+                      className="w-full h-40 object-contain bg-muted rounded-md border mb-2"
+                    />
+                  )}
+                  <Input
+                    id="photo"
+                    type="file"
+                    accept="image/*"
+                    onChange={handlePhotoSelect}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Choose a photo from your gallery or camera.
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="options">Options (ml)</Label>
+                  <Input
+                    id="options"
+                    value={form.options}
+                    onChange={(e) => setForm({ ...form, options: e.target.value })}
+                    placeholder="Small, Medium, Large"
+                  />
+                </div>
+
+                <label className="flex items-center gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={form.is_new}
+                    onChange={(e) => setForm({ ...form, is_new: e.target.checked })}
+                  />
+                  Mark as new
+                </label>
+
+                {error && <p className="text-sm text-destructive">{error}</p>}
+
+                <Button className="w-full" onClick={handleSave} disabled={saving}>
+                  {uploadingPhoto ? (
+                    <>
+                      <Spinner /> Uploading photo...
+                    </>
+                  ) : saving ? (
+                    <>
+                      <Spinner /> Saving...
+                    </>
+                  ) : editingProduct ? (
+                    "Save Changes"
+                  ) : (
+                    "Add Product"
+                  )}
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
 
         <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -350,102 +445,6 @@ export default function AdminPage() {
           ))}
         </div>
 
-        <div className="mt-6 flex flex-wrap gap-2">
-          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger asChild>
-              <Button onClick={openAddDialog}>Add Product</Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>
-                  {editingProduct ? "Edit Product" : "Add Product"}
-                </DialogTitle>
-              </DialogHeader>
-
-              <div className="space-y-4 py-2">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Product Name</Label>
-                  <Input
-                    id="name"
-                    value={form.name}
-                    onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    placeholder="e.g. Vanilla Perfume"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="price">Price (₦)</Label>
-                  <Input
-                    id="price"
-                    type="text"
-                    inputMode="numeric"
-                    value={form.price}
-                    onChange={handlePriceChange}
-                    placeholder="e.g. 5,000"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="photo">Product Photo</Label>
-                  {photoPreview && (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={photoPreview}
-                      alt="Preview"
-                      className="w-full h-40 object-contain bg-muted rounded-md border mb-2"
-                    />
-                  )}
-                  <Input
-                    id="photo"
-                    type="file"
-                    accept="image/*"
-                    onChange={handlePhotoSelect}
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    Choose a photo from your gallery or camera.
-                  </p>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="options">Options (ml)</Label>
-                  <Input
-                    id="options"
-                    value={form.options}
-                    onChange={(e) => setForm({ ...form, options: e.target.value })}
-                    placeholder="Small, Medium, Large"
-                  />
-                </div>
-
-                <label className="flex items-center gap-2 text-sm">
-                  <input
-                    type="checkbox"
-                    checked={form.is_new}
-                    onChange={(e) => setForm({ ...form, is_new: e.target.checked })}
-                  />
-                  Mark as new
-                </label>
-
-                {error && <p className="text-sm text-destructive">{error}</p>}
-
-                <Button className="w-full" onClick={handleSave} disabled={saving}>
-                  {uploadingPhoto ? (
-                    <>
-                      <Spinner /> Uploading photo...
-                    </>
-                  ) : saving ? (
-                    <>
-                      <Spinner /> Saving...
-                    </>
-                  ) : editingProduct ? (
-                    "Save Changes"
-                  ) : (
-                    "Add Product"
-                  )}
-                </Button>
-              </div>
-            </DialogContent>
-          </Dialog>
-        </div>
       </main>
 
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
