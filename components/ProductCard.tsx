@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Product } from "@/types/product";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,12 +14,20 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { buildWhatsAppOrderLink } from "@/lib/whatsapp";
-import { SparklesIcon } from "hugeicons-react";
+import { addProductToCart, getCartCount, isFavoriteProduct, toggleFavoriteProduct } from "@/lib/storage";
+import { SparklesIcon, FavouriteIcon, ShoppingCart02Icon } from "hugeicons-react";
 
 export default function ProductCard({ product }: { product: Product }) {
   const [customerName, setCustomerName] = useState("");
   const [selectedOption, setSelectedOption] = useState("");
   const [open, setOpen] = useState(false);
+  const [favorite, setFavorite] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
+
+  useEffect(() => {
+    setFavorite(isFavoriteProduct(product.id));
+    setCartCount(getCartCount());
+  }, [product.id]);
 
   const optionsList = product.options
     ? product.options.split(",").map((o) => o.trim())
@@ -35,6 +43,16 @@ export default function ProductCard({ product }: { product: Product }) {
     setOpen(false);
   }
 
+  function handleToggleFavorite() {
+    const nextState = toggleFavoriteProduct(product.id);
+    setFavorite(nextState.includes(product.id));
+  }
+
+  function handleAddToCart() {
+    const nextItems = addProductToCart(product, selectedOption || null);
+    setCartCount(nextItems.reduce((total, item) => total + item.quantity, 0));
+  }
+
   return (
     <Card className="group h-full overflow-hidden flex flex-col rounded-2xl border-border/60 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10 hover:border-primary/30">
       {/* Photo */}
@@ -47,8 +65,11 @@ export default function ProductCard({ product }: { product: Product }) {
             className="max-h-full max-w-full object-contain transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
-          <div className="flex items-center justify-center h-full text-muted-foreground text-sm">
-            No photo
+          <div className="flex h-full w-full items-center justify-center rounded-2xl border border-dashed border-border/70 bg-background/60 p-4 text-center text-sm text-muted-foreground">
+            <div>
+              <p className="font-medium text-foreground">No photo yet</p>
+              <p className="mt-1 text-xs">Add an image to show it here</p>
+            </div>
           </div>
         )}
 
@@ -58,7 +79,26 @@ export default function ProductCard({ product }: { product: Product }) {
         )}
       </div>
 
-      <CardContent className="pt-5 flex-1 flex flex-col">
+      <CardContent className="pt-3 flex-1 flex flex-col">
+        <div className="mb-3 flex items-center justify-end gap-2">
+          <button
+            type="button"
+            onClick={handleToggleFavorite}
+            className="rounded-full border border-border bg-background/90 p-2 text-primary shadow-sm"
+            aria-label="Add to favorites"
+          >
+            <FavouriteIcon className={`h-4 w-4 ${favorite ? "fill-current" : ""}`} />
+          </button>
+          <button
+            type="button"
+            onClick={handleAddToCart}
+            className="rounded-full border border-border bg-background/90 p-2 text-primary shadow-sm"
+            aria-label="Add to cart"
+          >
+            <ShoppingCart02Icon className="h-4 w-4" />
+            {cartCount > 0 && <span className="ml-1 text-[10px]">{cartCount}</span>}
+          </button>
+        </div>
         {/* Status pills */}
         <div className="flex gap-2 mb-3">
           {product.is_new && (
@@ -75,7 +115,7 @@ export default function ProductCard({ product }: { product: Product }) {
         </div>
 
         {/* Name + price */}
-        <h3 className="font-heading text-lg leading-snug tracking-tight line-clamp-2 min-h-[3.5rem]">
+        <h3 className="font-heading text-lg leading-snug tracking-tight line-clamp-2 min-h-14">
           {product.name}
         </h3>
         <p className="mt-1 text-primary font-semibold tracking-wide">
@@ -143,7 +183,7 @@ export default function ProductCard({ product }: { product: Product }) {
               )}
 
               <Button className="w-full rounded-full" onClick={handleOrder}>
-                Send Order on WhatsApp
+                Place Order
               </Button>
             </div>
           </DialogContent>
