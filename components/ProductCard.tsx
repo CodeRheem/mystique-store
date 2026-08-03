@@ -141,10 +141,10 @@ export default function ProductCard({ product }: { product: Product }) {
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button
-              className="w-full rounded-full font-medium tracking-wide"
+              className="w-full rounded-full font-medium tracking-wide mt-3"
               disabled={product.is_sold_out}
             >
-              {product.is_sold_out ? "Currently Unavailable" : "Order on WhatsApp"}
+              {product.is_sold_out ? "Currently Unavailable" : "Place Order"}
             </Button>
           </DialogTrigger>
           <DialogContent>

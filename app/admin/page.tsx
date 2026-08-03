@@ -29,6 +29,7 @@ export default function AdminPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [productsLoading, setProductsLoading] = useState(true);
   const [error, setError] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Add/Edit dialog state
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -190,6 +191,14 @@ export default function AdminPage() {
     window.location.assign("/");
   }
 
+  const normalizedSearchQuery = searchQuery.trim().toLowerCase();
+  const filteredProducts = normalizedSearchQuery
+    ? products.filter((product) => {
+        const haystack = `${product.name} ${product.options ?? ""} ${product.price}`.toLowerCase();
+        return haystack.includes(normalizedSearchQuery);
+      })
+    : products;
+
   async function handleLogout() {
     await supabase.auth.signOut();
     router.push("/admin/login");
@@ -230,6 +239,29 @@ export default function AdminPage() {
           <h2 className="text-xl font-semibold">Products</h2>
         </div>
 
+        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="flex-1 space-y-2">
+            <Label htmlFor="admin-search" className="text-sm font-medium">
+              Search products
+            </Label>
+            <Input
+              id="admin-search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search by name, option, or price"
+            />
+          </div>
+          <Button
+            type="button"
+            variant="outline"
+            className="sm:mt-7"
+            onClick={() => setSearchQuery("")}
+            disabled={!searchQuery}
+          >
+            Clear search
+          </Button>
+        </div>
+
         {error && !dialogOpen && (
           <p className="text-sm text-destructive mb-4">{error}</p>
         )}
@@ -244,8 +276,14 @@ export default function AdminPage() {
           <p className="text-muted-foreground">No products yet. Add your first one below.</p>
         )}
 
+        {searchQuery && !productsLoading && filteredProducts.length === 0 && (
+          <p className="mb-4 text-sm text-muted-foreground">
+            No products match “{searchQuery}”.
+          </p>
+        )}
+
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
             <Card key={product.id} className="overflow-hidden">
               {product.photo_url ? (
                 // eslint-disable-next-line @next/next/no-img-element

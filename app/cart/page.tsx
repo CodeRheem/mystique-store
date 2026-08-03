@@ -7,6 +7,7 @@ import { Product } from "@/types/product";
 import { getCartItems, removeCartItem, updateCartItemQuantity } from "@/lib/storage";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft01Icon, ShoppingCart02Icon, Delete01Icon } from "hugeicons-react";
+import { buildWhatsAppCartLink } from "@/lib/whatsapp";
 
 export default function CartPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -28,6 +29,23 @@ export default function CartPage() {
   const total = useMemo(() => {
     return cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
   }, [cartItems]);
+
+  function handlePlaceOrder() {
+    if (cartItems.length === 0) return;
+
+    const link = buildWhatsAppCartLink({
+      customerName: "Customer",
+      items: cartItems.map((item) => ({
+        name: item.name,
+        quantity: item.quantity,
+        price: item.price,
+        options: item.options,
+      })),
+      subtotal: total,
+    });
+
+    window.open(link, "_blank");
+  }
 
   return (
     <main className="min-h-screen bg-background">
@@ -58,9 +76,18 @@ export default function CartPage() {
               {cartItems.map((item) => (
                 <div key={item.productId} className="rounded-3xl border border-border bg-card p-4">
                   <div className="flex items-start gap-4">
-                    <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-muted text-center text-xs text-muted-foreground">
-                      No image
-                    </div>
+                    {item.photo_url ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={item.photo_url}
+                        alt={item.name}
+                        className="h-20 w-20 rounded-2xl object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-muted text-center text-xs text-muted-foreground">
+                        No image
+                      </div>
+                    )}
                     <div className="flex-1">
                       <div className="flex items-start justify-between gap-2">
                         <div>
@@ -101,13 +128,31 @@ export default function CartPage() {
 
             <div className="rounded-3xl border border-border bg-card p-5">
               <h3 className="font-medium">Order summary</h3>
-              <div className="mt-4 space-y-2 text-sm text-muted-foreground">
+              <div className="mt-4 space-y-3 text-sm text-muted-foreground">
+                <div className="space-y-2">
+                  {cartItems.map((item) => (
+                    <div key={item.productId} className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="font-medium text-foreground">{item.name}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {item.quantity} x ₦{item.price.toLocaleString()}
+                          {item.options ? ` • ${item.options}` : ""}
+                        </p>
+                      </div>
+                      <span className="shrink-0 text-foreground">
+                        ₦{(item.price * item.quantity).toLocaleString()}
+                      </span>
+                    </div>
+                  ))}
+                </div>
                 <div className="flex justify-between">
                   <span>Subtotal</span>
                   <span>₦{total.toLocaleString()}</span>
                 </div>
               </div>
-              <Button className="mt-6 w-full rounded-full">Continue to WhatsApp</Button>
+              <Button className="mt-6 w-full rounded-full" onClick={handlePlaceOrder}>
+                Place Order
+              </Button>
             </div>
           </div>
         )}

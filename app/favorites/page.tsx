@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+// eslint-disable-next-line no-duplicate-imports
 import { getProducts } from "@/lib/products";
 import { Product } from "@/types/product";
 import { getFavoriteProductIds, toggleFavoriteProduct } from "@/lib/storage";
@@ -59,9 +60,18 @@ export default function FavoritesPage() {
             {favoriteProducts.map((product) => (
               <div key={product.id} className="rounded-3xl border border-border bg-card p-4">
                 <div className="flex items-start gap-4">
-                  <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-muted text-center text-xs text-muted-foreground">
-                    No image
-                  </div>
+                  {product.photo_url ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={product.photo_url}
+                      alt={product.name}
+                      className="h-20 w-20 rounded-2xl object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-muted text-center text-xs text-muted-foreground">
+                      No image
+                    </div>
+                  )}
                   <div className="flex-1">
                     <div className="flex items-start justify-between gap-2">
                       <div>

@@ -12,11 +12,41 @@ export function buildWhatsAppOrderLink({
   selectedOption?: string;
 }) {
   const lines = [
-    `Hi! I'd like to order:`,
-    `Item: ${productName}`,
-    selectedOption ? `Option: ${selectedOption}` : null,
-    `Name: ${customerName}`,
+    `Hello, I would like to place an order.`,
+    `Customer Name: ${customerName}`,
+    `Product: ${productName}`,
+    selectedOption ? `Selected Option: ${selectedOption}` : null,
   ].filter(Boolean);
+
+  const message = encodeURIComponent(lines.join("\n"));
+  return `https://wa.me/${BUSINESS_WHATSAPP_NUMBER}?text=${message}`;
+}
+
+export function buildWhatsAppCartLink({
+  customerName,
+  items,
+  subtotal,
+}: {
+  customerName: string;
+  items: Array<{
+    name: string;
+    quantity: number;
+    price: number;
+    options?: string | null;
+  }>;
+  subtotal: number;
+}) {
+  const lines = [
+    `Hello, I would like to place an order for the following items:`,
+    `Customer Name: ${customerName}`,
+    ...items.map((item) => {
+      const optionText = item.options ? ` (${item.options})` : "";
+      const lineTotal = item.price * item.quantity;
+      return `- ${item.name}${optionText} | Qty: ${item.quantity} | Unit Price: ₦${item.price.toLocaleString()} | Total: ₦${lineTotal.toLocaleString()}`;
+    }),
+    `Subtotal: ₦${subtotal.toLocaleString()}`,
+    `Please confirm availability and delivery details.`,
+  ];
 
   const message = encodeURIComponent(lines.join("\n"));
   return `https://wa.me/${BUSINESS_WHATSAPP_NUMBER}?text=${message}`;
