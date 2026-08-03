@@ -36,9 +36,9 @@ export default function ProductCard({ product }: { product: Product }) {
   }
 
   return (
-    <Card className="group overflow-hidden flex flex-col rounded-2xl border-border/60 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10 hover:border-primary/30">
+    <Card className="group h-full overflow-hidden flex flex-col rounded-2xl border-border/60 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10 hover:border-primary/30">
       {/* Photo */}
-      <div className="relative h-64 bg-muted flex items-center justify-center p-4 overflow-hidden">
+      <div className="relative h-64 min-h-64 bg-muted flex items-center justify-center p-4 overflow-hidden">
         {product.photo_url ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -58,7 +58,7 @@ export default function ProductCard({ product }: { product: Product }) {
         )}
       </div>
 
-      <CardContent className="pt-5 flex-1">
+      <CardContent className="pt-5 flex-1 flex flex-col">
         {/* Status pills */}
         <div className="flex gap-2 mb-3">
           {product.is_new && (
@@ -75,7 +75,7 @@ export default function ProductCard({ product }: { product: Product }) {
         </div>
 
         {/* Name + price */}
-        <h3 className="font-heading text-lg leading-snug tracking-tight">
+        <h3 className="font-heading text-lg leading-snug tracking-tight line-clamp-2 min-h-[3.5rem]">
           {product.name}
         </h3>
         <p className="mt-1 text-primary font-semibold tracking-wide">
@@ -97,7 +97,7 @@ export default function ProductCard({ product }: { product: Product }) {
         )}
       </CardContent>
 
-      <CardFooter className="pt-0">
+      <CardFooter className="pt-0 mt-auto">
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button
@@ -143,7 +143,7 @@ export default function ProductCard({ product }: { product: Product }) {
               )}
 
               <Button className="w-full rounded-full" onClick={handleOrder}>
-                Place Order
+                Send Order on WhatsApp
               </Button>
             </div>
           </DialogContent>

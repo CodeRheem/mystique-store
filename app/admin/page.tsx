@@ -44,6 +44,7 @@ export default function AdminPage() {
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string>("");
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const [seedingSampleProducts, setSeedingSampleProducts] = useState(false);
   const [loveDialogOpen, setLoveDialogOpen] = useState(false);
 
   useEffect(() => {
@@ -104,6 +105,122 @@ export default function AdminPage() {
     setPhotoFile(null);
     setPhotoPreview(product.photo_url ?? "");
     setDialogOpen(true);
+  }
+
+  async function handleSeedSampleProducts() {
+    const confirmed = window.confirm(
+      "Add 10 sample perfume products with images for testing?"
+    );
+    if (!confirmed) return;
+
+    setSeedingSampleProducts(true);
+    setError("");
+
+    try {
+      const samplePerfumes = [
+        {
+          name: "Velvet Bloom",
+          price: 18000,
+          photo_url:
+            "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=900&q=80",
+          options: "Eau de Parfum • 100ml",
+          is_new: true,
+        },
+        {
+          name: "Midnight Orchid",
+          price: 22000,
+          photo_url:
+            "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=900&q=80",
+          options: "Eau de Parfum • 100ml",
+          is_new: true,
+        },
+        {
+          name: "Golden Citrus",
+          price: 16000,
+          photo_url:
+            "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?auto=format&fit=crop&w=900&q=80",
+          options: "EDP • 75ml",
+          is_new: false,
+        },
+        {
+          name: "Rose Velvet",
+          price: 19500,
+          photo_url:
+            "https://images.unsplash.com/photo-1523293182086-7651a899edc7?auto=format&fit=crop&w=900&q=80",
+          options: "Eau de Parfum • 100ml",
+          is_new: true,
+        },
+        {
+          name: "Amber Noir",
+          price: 24000,
+          photo_url:
+            "https://images.unsplash.com/photo-1612817288484-6f916006741a?auto=format&fit=crop&w=900&q=80",
+          options: "EDP • 100ml",
+          is_new: true,
+        },
+        {
+          name: "Ocean Mist",
+          price: 17500,
+          photo_url:
+            "https://images.unsplash.com/photo-1585386959984-a4155224a1ad?auto=format&fit=crop&w=900&q=80",
+          options: "EDP • 80ml",
+          is_new: false,
+        },
+        {
+          name: "Saffron Glow",
+          price: 21000,
+          photo_url:
+            "https://images.unsplash.com/photo-1590736704728-0d7e4f5f6f18?auto=format&fit=crop&w=900&q=80",
+          options: "Parfum • 90ml",
+          is_new: true,
+        },
+        {
+          name: "Luna Musk",
+          price: 18500,
+          photo_url:
+            "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=900&q=80",
+          options: "EDP • 100ml",
+          is_new: false,
+        },
+        {
+          name: "Cedar Breeze",
+          price: 20000,
+          photo_url:
+            "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?auto=format&fit=crop&w=900&q=80",
+          options: "Eau de Parfum • 100ml",
+          is_new: true,
+        },
+        {
+          name: "Pearl Jasmine",
+          price: 23000,
+          photo_url:
+            "https://images.unsplash.com/photo-1563170351-be82ae4c1d3b?auto=format&fit=crop&w=900&q=80",
+          options: "Parfum • 100ml",
+          is_new: true,
+        },
+      ];
+
+      const existingNames = new Set(products.map((product) => product.name.toLowerCase()));
+
+      for (const perfume of samplePerfumes) {
+        if (existingNames.has(perfume.name.toLowerCase())) continue;
+
+        await addProduct({
+          name: perfume.name,
+          price: perfume.price,
+          photo_url: perfume.photo_url,
+          options: perfume.options,
+          is_new: perfume.is_new,
+        });
+        existingNames.add(perfume.name.toLowerCase());
+      }
+
+      await loadProducts();
+    } catch {
+      setError("Couldn't create the sample perfume products.");
+    } finally {
+      setSeedingSampleProducts(false);
+    }
   }
 
   async function handleSave() {
@@ -172,6 +289,10 @@ export default function AdminPage() {
     }
   }
 
+  function handleViewStore() {
+    window.location.assign("/");
+  }
+
   async function handleLogout() {
     await supabase.auth.signOut();
     router.push("/admin/login");
@@ -194,12 +315,16 @@ export default function AdminPage() {
       <header className="border-b">
         <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
           <div>
-            <h1 className="text-lg font-semibold">Admin Dashboard</h1>
-            <p className="text-sm text-muted-foreground">{session.user.email}</p>
+            <h1 className="text-lg font-semibold">Hello Tobi,</h1>
           </div>
-          <Button variant="outline" onClick={handleLogout}>
-            Log Out
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={handleViewStore}>
+              View Store
+            </Button>
+            <Button variant="outline" onClick={handleLogout}>
+              Log Out
+            </Button>
+          </div>
         </div>
       </header>
 
@@ -279,7 +404,21 @@ export default function AdminPage() {
           ))}
         </div>
 
-        <div className="mt-6">
+        <div className="mt-6 flex flex-wrap gap-2">
+          <Button
+            variant="outline"
+            onClick={handleSeedSampleProducts}
+            disabled={seedingSampleProducts}
+          >
+            {seedingSampleProducts ? (
+              <>
+                <Spinner /> Adding 10 sample perfumes...
+              </>
+            ) : (
+              "Load 10 sample perfumes"
+            )}
+          </Button>
+
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
               <Button onClick={openAddDialog}>Add Product</Button>
@@ -336,7 +475,7 @@ export default function AdminPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="options">Options (comma-separated)</Label>
+                  <Label htmlFor="options">Options (ml)</Label>
                   <Input
                     id="options"
                     value={form.options}
