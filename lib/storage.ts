@@ -68,6 +68,10 @@ export function getCartItems(): CartItem[] {
   return readStorageValue<CartItem[]>(CART_STORAGE_KEY, []);
 }
 
+export function isProductInCart(productId: string): boolean {
+  return getCartItems().some((item) => item.productId === productId);
+}
+
 export function addProductToCart(product: Product, option?: string | null): CartItem[] {
   const items = getCartItems();
   const existingItem = items.find((item) => item.productId === product.id);

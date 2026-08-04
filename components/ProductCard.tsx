@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { buildWhatsAppOrderLink } from "@/lib/whatsapp";
-import { addProductToCart, getCartCount, isFavoriteProduct, toggleFavoriteProduct } from "@/lib/storage";
+import { addProductToCart, isFavoriteProduct, isProductInCart, removeCartItem, toggleFavoriteProduct } from "@/lib/storage";
 import { SparklesIcon, FavouriteIcon, ShoppingCart02Icon } from "hugeicons-react";
 
 export default function ProductCard({ product }: { product: Product }) {
@@ -22,11 +22,17 @@ export default function ProductCard({ product }: { product: Product }) {
   const [selectedOption, setSelectedOption] = useState("");
   const [open, setOpen] = useState(false);
   const [favorite, setFavorite] = useState(false);
-  const [cartCount, setCartCount] = useState(0);
+  const [cartActive, setCartActive] = useState(false);
 
   useEffect(() => {
-    setFavorite(isFavoriteProduct(product.id));
-    setCartCount(getCartCount());
+    const syncState = () => {
+      setFavorite(isFavoriteProduct(product.id));
+      setCartActive(isProductInCart(product.id));
+    };
+
+    syncState();
+    window.addEventListener("mystique-storage-updated", syncState);
+    return () => window.removeEventListener("mystique-storage-updated", syncState);
   }, [product.id]);
 
   const optionsList = product.options
@@ -48,9 +54,15 @@ export default function ProductCard({ product }: { product: Product }) {
     setFavorite(nextState.includes(product.id));
   }
 
-  function handleAddToCart() {
-    const nextItems = addProductToCart(product, selectedOption || null);
-    setCartCount(nextItems.reduce((total, item) => total + item.quantity, 0));
+  function handleToggleCart() {
+    if (cartActive) {
+      removeCartItem(product.id);
+      setCartActive(false);
+      return;
+    }
+
+    addProductToCart(product, selectedOption || null);
+    setCartActive(true);
   }
 
   return (
@@ -86,17 +98,22 @@ export default function ProductCard({ product }: { product: Product }) {
             onClick={handleToggleFavorite}
             className="rounded-full border border-border bg-background/90 p-2 text-primary shadow-sm"
             aria-label="Add to favorites"
+            aria-pressed={favorite}
           >
             <FavouriteIcon className={`h-4 w-4 ${favorite ? "fill-current" : ""}`} />
           </button>
           <button
             type="button"
-            onClick={handleAddToCart}
-            className="rounded-full border border-border bg-background/90 p-2 text-primary shadow-sm"
+            onClick={handleToggleCart}
+            className={`rounded-full border p-2 shadow-sm transition-colors ${
+              cartActive
+                ? "border-primary bg-primary text-primary-foreground"
+                : "border-border bg-background/90 text-primary"
+            }`}
             aria-label="Add to cart"
+            aria-pressed={cartActive}
           >
             <ShoppingCart02Icon className="h-4 w-4" />
-            {cartCount > 0 && <span className="ml-1 text-[10px]">{cartCount}</span>}
           </button>
         </div>
         {/* Status pills */}
