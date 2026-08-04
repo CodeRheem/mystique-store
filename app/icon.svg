@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Mystique World icon">
+  <rect width="512" height="512" rx="120" fill="#160b22"/>
+  <circle cx="256" cy="256" r="168" fill="none" stroke="#d89bff" stroke-width="18"/>
+  <path d="M154 342l34-152h33l35 82 35-82h33l34 152h-36l-18-82-36 82h-22l-36-82-18 82z" fill="#f0d8ff"/>
+  <path d="M246 156h20l38 112h-22l-7-22h-39l-7 22h-22zm22 67h-24l12-37z" fill="#d89bff"/>
+  <path d="M304 156h26l26 40 26-40h26l-38 59 41 53h-27l-28-38-28 38h-27l41-53z" fill="#d89bff"/>
+  <rect x="229" y="124" width="54" height="20" rx="5" fill="#d89bff"/>
+  <path d="M256 100l18 24h-36z" fill="#ffe7ff"/>
+</svg>

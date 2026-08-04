@@ -77,7 +77,7 @@ export default function ProductCard({ product }: { product: Product }) {
             className="max-h-full max-w-full object-contain transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center rounded-2xl border border-dashed border-border/70 bg-background/60 p-4 text-center text-sm text-muted-foreground">
+          <div className="flex h-full w-full items-center justify-center rounded-2xl border border-dashed border-primary bg-background/60 p-4 text-center text-sm text-muted-foreground">
             <div>
               <p className="font-medium text-foreground">No photo yet</p>
               <p className="mt-1 text-xs">Add an image to show it here</p>
