@@ -473,25 +473,6 @@ export default function AdminPage() {
           </div>
         </DialogContent>
       </Dialog>
-
-      {/* A little fun for her on login - she must answer to proceed */}
-      <Dialog open={loveDialogOpen}>
-        <DialogContent
-          className="text-center [&>button]:hidden"
-          onInteractOutside={(e) => e.preventDefault()}
-          onEscapeKeyDown={(e) => e.preventDefault()}
-        >
-          <DialogHeader>
-            <DialogTitle className="text-center text-xl">
-              Do you love CodeRheem? 👀
-            </DialogTitle>
-          </DialogHeader>
-          <div className="flex gap-3 justify-center py-2">
-            <Button onClick={() => setLoveDialogOpen(false)}>Yes</Button>
-            <Button onClick={() => setLoveDialogOpen(false)}>Yes</Button>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
