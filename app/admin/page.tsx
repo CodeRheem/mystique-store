@@ -463,7 +463,7 @@ export default function AdminPage() {
               <Button variant="destructive" onClick={handleDeleteConfirm} disabled={!!deletingProductId}>
                 {deletingProductId ? (
                   <>
-                    <Spinner /> Deleting...
+                    <Spinner /> Deleting....
                   </>
                 ) : (
                   "Delete product"
